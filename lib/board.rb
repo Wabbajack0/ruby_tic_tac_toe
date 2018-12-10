@@ -20,20 +20,10 @@ class Board
     while win_check == 0 && count < 9
       print_board
       if count % 2 == 0
-        puts "#{@player1} pick a square"
-        i, j = get_coordinates
-        while @board[i][j].value != 0
-          puts "This square has already been picked, pick another"
-          i, j = get_coordinates
-        end
+        i, j = ask_coordinates(@player1)
         @board[i][j].value = 1
       else
-        puts "#{@player2} pick a square"
-        i, j = get_coordinates
-        while @board[i][j].value != 0
-          puts "This square has already been picked, pick another"
-          i, j = get_coordinates
-        end
+        i, j = ask_coordinates(@player2)
         @board[i][j].value = -1
       end
       count += 1
@@ -50,12 +40,20 @@ class Board
 
   private
 
-  def get_coordinates
-    str = " "
-    while !str.match?(/[1-3],[1-3]/)
-      str = gets.chomp
-    end
-    return str[0].to_i - 1, str[2].to_i - 1
+  def ask_coordinates(player)
+      puts "#{player} pick a square"
+      str = ""
+      while !str.match?(/[1-3],[1-3]/)
+        puts "Add x and y coordinates separated by a comma (no spaces)"
+        str = gets.chomp
+      end
+      i = str[0].to_i - 1
+      j = str[2].to_i - 1
+      if @board[i][j].value != 0
+        puts "This square has already been picked, pick another"
+        i, j = ask_coordinates(player)
+      end
+      return i, j
   end
 
   def print_board
